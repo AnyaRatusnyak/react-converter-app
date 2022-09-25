@@ -1,51 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Converter.css";
+import Exchange from "./Exchange";
 
 export default function Converter() {
-  function handleResponse(response) {
-    console.log(response.data);
-  }
-  let apiUrl =
-    "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
-  axios.get(apiUrl).then(handleResponse);
+  const [currencyData, setCurrencyData] = useState({});
+
+  useEffect(() => {
+    const apiUrl =
+      "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
+    axios.get(apiUrl).then((resp) => {
+      setCurrencyData({
+        dollarData: resp.data[0].buy,
+        euroData: resp.data[1].buy,
+      });
+    });
+  }, [setCurrencyData]);
+
   return (
     <div className="Converter">
       <h1>Currency Converter</h1>
       <h2>
-        <span>$ 36 </span>
-        <span>€ 37</span>
+        <span>$ {currencyData.dollarData} </span>
+        <span>€ {currencyData.euroData}</span>
       </h2>
-      <div className="row">
-        <div className="col-6">
-          <form>
-            <select>
-              <option>UAH</option>
-              <option>USD</option>
-              <option>EUR</option>
-            </select>
-            <input
-              type="search"
-              placeholder="Enter amound"
-              className="form-control"
-            />
-          </form>
-        </div>
-        <div className="col-6">
-          <form>
-            <select>
-              <option>UAH</option>
-              <option>USD</option>
-              <option>EUR</option>
-            </select>
-            <input
-              type="search"
-              placeholder="Enter amound"
-              className="form-control"
-            />
-          </form>
-        </div>
-      </div>
+      <Exchange data={currencyData} />
     </div>
   );
 }
