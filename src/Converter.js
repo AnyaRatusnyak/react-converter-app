@@ -32,7 +32,7 @@ export default function Converter() {
         })
       );
   }, []);
-  console.log(exchangeData);
+
   useEffect(() => {
     fetch(
       `https://exchange-rates.abstractapi.com/v1/live?api_key=3a0e022085484f3887c30b7759573705&base=USD`
