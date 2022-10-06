@@ -9,7 +9,7 @@ export default function Converter() {
   const [fromCurrency, setFromCurrency] = useState();
   const [toCurrency, setToCurrency] = useState();
   const [exchangeRate, setExchangeRate] = useState();
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState();
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
   const [exchangeData, setExchangeData] = useState({});
 
@@ -54,7 +54,7 @@ export default function Converter() {
         );
     }
   }, [fromCurrency, toCurrency]);
-  console.log(toCurrency);
+
   function handleFromAmountChange(e) {
     setAmount(e.target.value);
     setAmountInFromCurrency(true);
