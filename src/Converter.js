@@ -12,6 +12,15 @@ export default function Converter() {
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
   const [exchangeData, setExchangeData] = useState({});
 
+  var myHeaders = new Headers();
+  myHeaders.append("apikey", "c17TLZjDRw54v2tu7MUQMwdSilBF2b7A");
+
+  var requestOptions = {
+    method: "GET",
+    redirect: "follow",
+    headers: myHeaders,
+  };
+
   let toAmount, fromAmount;
   if (amountInFromCurrency) {
     fromAmount = amount;
@@ -33,28 +42,12 @@ export default function Converter() {
   }, []);
 
   useEffect(() => {
-    var myHeaders = new Headers();
-    myHeaders.append("apikey", "c17TLZjDRw54v2tu7MUQMwdSilBF2b7A");
-
-    var requestOptions = {
-      method: "GET",
-      redirect: "follow",
-      headers: myHeaders,
-    };
     fetch(`https://api.apilayer.com/exchangerates_data/symbols`, requestOptions)
       .then((response) => response.json())
       .then((result) => setCurrencyOptions(Object.keys(result.symbols)));
   }, []);
 
   useEffect(() => {
-    var myHeaders = new Headers();
-    myHeaders.append("apikey", "c17TLZjDRw54v2tu7MUQMwdSilBF2b7A");
-
-    var requestOptions = {
-      method: "GET",
-      redirect: "follow",
-      headers: myHeaders,
-    };
     if (fromCurrency != null && toCurrency != null) {
       fetch(
         `https://api.apilayer.com/exchangerates_data/latest?symbols=${toCurrency}&base=${fromCurrency}`,
