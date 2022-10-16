@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./Converter.css";
 import Exchange from "./Exchange";
 import Rates from "./Rates";
 
 export default function Converter() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [fromCurrency, setFromCurrency] = useState();
-  const [toCurrency, setToCurrency] = useState();
+  const [fromCurrency, setFromCurrency] = useState("USD");
+  const [toCurrency, setToCurrency] = useState("EUR");
   const [exchangeRate, setExchangeRate] = useState();
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
   const [exchangeData, setExchangeData] = useState({});
 
@@ -34,24 +33,35 @@ export default function Converter() {
   }, []);
 
   useEffect(() => {
-    fetch(
-      `https://exchange-rates.abstractapi.com/v1/live?api_key=3a0e022085484f3887c30b7759573705&base=USD`
-    )
+    var myHeaders = new Headers();
+    myHeaders.append("apikey", "c17TLZjDRw54v2tu7MUQMwdSilBF2b7A");
+
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+      headers: myHeaders,
+    };
+    fetch(`https://api.apilayer.com/exchangerates_data/symbols`, requestOptions)
       .then((response) => response.json())
-      .then((result) =>
-        setCurrencyOptions(["USD", ...Object.keys(result.exchange_rates)])
-      );
+      .then((result) => setCurrencyOptions(Object.keys(result.symbols)));
   }, []);
 
   useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append("apikey", "c17TLZjDRw54v2tu7MUQMwdSilBF2b7A");
+
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+      headers: myHeaders,
+    };
     if (fromCurrency != null && toCurrency != null) {
       fetch(
-        `https://exchange-rates.abstractapi.com/v1/live/?api_key=3a0e022085484f3887c30b7759573705&base=${fromCurrency}&target=${toCurrency}`
+        `https://api.apilayer.com/exchangerates_data/latest?symbols=${toCurrency}&base=${fromCurrency}`,
+        requestOptions
       )
         .then((response) => response.json())
-        .then((result) =>
-          setExchangeRate(Object.values(result.exchange_rates)[0])
-        );
+        .then((result) => setExchangeRate(Object.values(result.rates)));
     }
   }, [fromCurrency, toCurrency]);
 
